@@ -1,4 +1,4 @@
-import { PC1, PC2, IP, FP, SHIFTS, SBOXES, P } from './des-tables';
+import { PC1, PC2, IP, FP, SHIFTS, SBOXES, P, applyPermutation } from './des-tables';
 
 export const E = [
   32, 1, 2, 3, 4, 5,
@@ -15,7 +15,9 @@ export function hexToBinaryStr(hex?: string): string {
   if (!hex) return "";
   let out = "";
   for (let i = 0; i < hex.length; i++) {
-    out += parseInt(hex[i], 16).toString(2).padStart(4, '0');
+    const val = parseInt(hex[i], 16);
+    if (isNaN(val)) return "";
+    out += val.toString(2).padStart(4, '0');
   }
   return out;
 }
@@ -28,13 +30,13 @@ export function binaryStrToHex(bin: string): string {
   return out;
 }
 
-export function applyPermutation(bits: string, table: number[]): string {
-  return table.map(pos => bits[pos - 1]).join('');
-}
-
 export function computeDESData(plaintextHex: string, keyHex: string, isDecrypt: boolean = false) {
   const ptBin = hexToBinaryStr(plaintextHex).padEnd(64, '0');
   const keyBin = hexToBinaryStr(keyHex).padEnd(64, '0');
+
+  if (!ptBin || !keyBin) {
+    throw new Error("Invalid hex input: both plaintext and key must be valid hexadecimal strings.");
+  }
 
   // Initial States
   const ipOut = applyPermutation(ptBin, IP);

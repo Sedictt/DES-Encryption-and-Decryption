@@ -8,15 +8,8 @@ import { FP } from '../../lib/des-tables';
 export function Slide10_FinalPermutation({ desData, isDecrypt }: any) {
   const [animStep, setAnimStep] = useState(0);
 
-  const preFPBits = desData?.preFP || "1100000000101010111100111010100100110110010111110001000100010110";
+const preFPBits = desData?.preFP || "1100000000101010111100111010100100110110010111110001000100010110";
 
-  const getBits = () => {
-    if(animStep === 0) return preFPBits.split('');
-    return FP.map(pos => preFPBits[pos - 1]);
-  };
-
-  const currentBits = animStep === 0 ? preFPBits.split('') : FP.map(pos => preFPBits[pos - 1]);
-  
   // The indices array dictates the physical DOM order of elements
   const indices = animStep === 0 ? Array.from({length: 64}, (_, i) => i) : FP.map(i => i - 1);
 

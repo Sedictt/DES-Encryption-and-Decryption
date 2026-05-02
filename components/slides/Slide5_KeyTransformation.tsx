@@ -70,10 +70,7 @@ export function Slide5_KeyTransformation({ encKey, round = 1, isDecrypt }: any) 
   const [pc2AnimStep, setPc2AnimStep] = useState(3);
 
   useEffect(() => {
-    // reset animation state on round change
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setHasShifted(false);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPc2AnimStep(0);
     setIsPlaying(false);
   }, [round]);

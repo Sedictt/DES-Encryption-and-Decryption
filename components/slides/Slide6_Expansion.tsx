@@ -177,7 +177,7 @@ export function Slide6_Expansion({ roundData }: any) {
               {/* Bottom Row: Resulting 6-bit chunk */}
               <div className="flex flex-col items-center min-h-[80px]">
                 <span className="text-xs text-emerald-400 font-bold mb-2">Resulting 6-bit Block</span>
-                <div className="flex justify-center gap-1 item-center h-12 bg-slate-900/50 p-1 rounded-lg">
+                <div className="flex justify-center gap-1 items-center h-12 bg-slate-900/50 p-1 rounded-lg">
                   <AnimatePresence mode="wait">
                     {step >= 2 && (
                       <motion.div key="bit-prev-res" layoutId="bit-prev" className="w-10 h-10 flex items-center justify-center bg-emerald-500 text-white font-bold rounded shadow" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{borrowLeft}</motion.div>
