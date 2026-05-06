@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useMemo } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Maximize, Minimize, ChevronLeft, ChevronRight, EyeOff, Eye, PenTool, Trash2, ZoomIn, ZoomOut, Hand, RefreshCcw, Settings2 } from 'lucide-react';
 import { Slide0_Intro } from './slides/Slide0_Intro';
@@ -16,7 +15,7 @@ import { Slide8_SBox } from './slides/Slide8_SBox';
 import { Slide9_PBox } from './slides/Slide9_PBox';
 import { Slide10_FinalPermutation } from './slides/Slide10_FinalPermutation';
 import { Slide11_Decryption } from './slides/Slide11_Decryption';
-import { computeDESData, binaryStrToHex } from '../lib/des-utils';
+import { computeDESData } from '../lib/des-utils';
 
 export function Presentation() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -92,7 +91,7 @@ export function Presentation() {
   const desData = useMemo(() => computeDESData(plaintext, key), [plaintext, key]);
   const decryptData = useMemo(() => computeDESData(desData.cipherHex, key, true), [desData.cipherHex, key]);
 
-  const slidesRaw: any[] = [
+  const slidesRaw = useMemo(() => { const arr: any[] = [
     { component: Slide0_Intro, label: "Intro" },
     { component: Slide2_InitialPermutation, label: "Initial Perm" },
     { component: Slide3_Split, label: "Split" },
@@ -101,30 +100,31 @@ export function Presentation() {
   ];
 
   for (let r = 1; r <= 16; r++) {
-    slidesRaw.push({ component: Slide5_KeyTransformation, round: r, label: `Round ${r} Key Gen` });
-    slidesRaw.push({ component: Slide6_Expansion, round: r, label: `Round ${r} Expansion` });
-    slidesRaw.push({ component: Slide7_XOR, round: r, label: `Round ${r} Key Mixing` });
-    slidesRaw.push({ component: Slide8_SBox, round: r, label: `Round ${r} S-Box Sub` });
-    slidesRaw.push({ component: Slide9_PBox, round: r, label: `Round ${r} P-Box Perm` });
+    arr.push({ component: Slide5_KeyTransformation, round: r, label: `Round ${r} Key Gen` });
+    arr.push({ component: Slide6_Expansion, round: r, label: `Round ${r} Expansion` });
+    arr.push({ component: Slide7_XOR, round: r, label: `Round ${r} Key Mixing` });
+    arr.push({ component: Slide8_SBox, round: r, label: `Round ${r} S-Box Sub` });
+    arr.push({ component: Slide9_PBox, round: r, label: `Round ${r} P-Box Perm` });
   }
 
-  slidesRaw.push({ component: Slide10_FinalPermutation, label: "Final Perm" });
+  arr.push({ component: Slide10_FinalPermutation, label: "Final Perm" });
 
   // Decryption Slides
-  slidesRaw.push({ component: Slide11_Decryption, label: "Decryption Intro" });
-  slidesRaw.push({ component: Slide2_InitialPermutation, isDecrypt: true, label: "Dec: Initial Perm" });
-  slidesRaw.push({ component: Slide3_Split, isDecrypt: true, label: "Dec: Split" });
-  slidesRaw.push({ component: Slide4_RoundOverview, isDecrypt: true, label: "Dec: Round Overview" });
+  arr.push({ component: Slide11_Decryption, label: "Decryption Intro" });
+  arr.push({ component: Slide2_InitialPermutation, isDecrypt: true, label: "Dec: Initial Perm" });
+  arr.push({ component: Slide3_Split, isDecrypt: true, label: "Dec: Split" });
+  arr.push({ component: Slide4_RoundOverview, isDecrypt: true, label: "Dec: Round Overview" });
 
   for (let r = 1; r <= 16; r++) {
-    slidesRaw.push({ component: Slide5_KeyTransformation, round: r, isDecrypt: true, label: `Dec: R${r} Key Gen` });
-    slidesRaw.push({ component: Slide6_Expansion, round: r, isDecrypt: true, label: `Dec: R${r} Expansion` });
-    slidesRaw.push({ component: Slide7_XOR, round: r, isDecrypt: true, label: `Dec: R${r} Key Mixing` });
-    slidesRaw.push({ component: Slide8_SBox, round: r, isDecrypt: true, label: `Dec: R${r} S-Box Sub` });
-    slidesRaw.push({ component: Slide9_PBox, round: r, isDecrypt: true, label: `Dec: R${r} P-Box Perm` });
+    arr.push({ component: Slide5_KeyTransformation, round: r, isDecrypt: true, label: `Dec: R${r} Key Gen` });
+    arr.push({ component: Slide6_Expansion, round: r, isDecrypt: true, label: `Dec: R${r} Expansion` });
+    arr.push({ component: Slide7_XOR, round: r, isDecrypt: true, label: `Dec: R${r} Key Mixing` });
+    arr.push({ component: Slide8_SBox, round: r, isDecrypt: true, label: `Dec: R${r} S-Box Sub` });
+    arr.push({ component: Slide9_PBox, round: r, isDecrypt: true, label: `Dec: R${r} P-Box Perm` });
   }
 
-  slidesRaw.push({ component: Slide10_FinalPermutation, isDecrypt: true, label: "Dec: Final Perm" });
+  arr.push({ component: Slide10_FinalPermutation, isDecrypt: true, label: "Dec: Final Perm" });
+  return arr; }, []);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => Math.min(prev + 1, slidesRaw.length - 1));

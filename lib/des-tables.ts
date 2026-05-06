@@ -35,7 +35,7 @@ export const PC2 = [
 
 export const SHIFTS = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1];
 
-export function applyPermutation(bits: string, table: number[]) {
+export function applyPermutation(bits: string, table: number[]): string {
   return table.map(pos => bits[pos - 1]).join('');
 }
 

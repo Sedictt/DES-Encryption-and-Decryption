@@ -24,7 +24,10 @@ function applyPKCS7(hexInput: string) {
   let hex = hexInput;
   if (hex.length % 2 !== 0) hex = '0' + hex;
   const byteLen = hex.length / 2;
-  if (byteLen >= 8) return { paddedHex: hex.substring(0, 16), padCount: 0, padByteHex: '' };
+  if (byteLen > 8) {
+    return { paddedHex: hex, padCount: 0, padByteHex: '', truncated: true, originalByteLen: byteLen };
+  }
+  if (byteLen === 8) return { paddedHex: hex, padCount: 0, padByteHex: '' };
   const padCount = 8 - byteLen;
   const padByteHex = padCount.toString(16).padStart(2, '0').toUpperCase();
   const paddedHex = hex + padByteHex.repeat(padCount);
@@ -32,9 +35,11 @@ function applyPKCS7(hexInput: string) {
 }
 
 function generateRandomKey() {
+  const arr = new Uint8Array(8);
+  crypto.getRandomValues(arr);
   let keyHex = '';
-  for (let i = 0; i < 16; i++) {
-    keyHex += Math.floor(Math.random() * 16).toString(16).toUpperCase();
+  for (let i = 0; i < arr.length; i++) {
+    keyHex += arr[i].toString(16).padStart(2, '0').toUpperCase();
   }
   return keyHex;
 }
